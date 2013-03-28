@@ -1,4 +1,4 @@
-chef-zend-server
-================
+Chef - Zend Server
+==================
 
-Simple Chef recipe for installing Zend Server 6 on a Ubuntu Linux server.
+This is a simple chef recipe to install Zend Server 6 with PHP 5.4.
