@@ -22,5 +22,17 @@ execute "apt-get update"
 execute "apt-get install zend-server-php-5.4 -y"
 
 
-# Extra extensions
-# php-5.4-mssql-zend-server, php-5.4-gmp-zend-server, php-5.4-wddx-zend-server, php-5.4-memcache-zend-server, php-5.4-xmlrpc-zend-server, php-5.4-odbc-zend-server, php-5.4-pdo-odbc-zend-server, php-5.4-imagick-zend-server, php-5.4-pdo-dblib-zend-server, php-5.4-unix-extensions-zend-server, php-5.4-ssh2-zend-server, php-5.4-memcached-zend-server, php-5.4-mongo-zend-server
+# Install extra extensions
+node[:zend_server][:extensions].each do |ext_name, actions|
+  # Support literal package name 
+  if node[:zend_server][:supported_extensions].include? name or (not node[:zend_server][:verify_extensions])
+    package ext_name do
+      action actions
+    end
+  # Support short-hand package names based on PHP version.
+  elseif node[:zend_server][:supported_extensions].include? "php-#{node[:zend_server][:php][:version]}-#{ext_name}-zend-server"
+    package "php-#{node[:zend_server][:php][:version]}-#{ext_name}-zend-server" do
+      action actions
+    end
+  end
+end
